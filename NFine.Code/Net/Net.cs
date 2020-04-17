@@ -4,10 +4,12 @@
 
 
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Web;
 
@@ -18,6 +20,10 @@ namespace NFine.Code
     /// </summary>
     public class Net
     {
+        [DllImport("Iphlpapi.dll")]
+        private static extern int SendARP(Int32 dest, Int32 host, ref Int64 mac, ref Int32 length);
+        [DllImport("Ws2_32.dll")]
+        private static extern Int32 inet_addr(string ip);
         #region Ip(获取Ip)
         /// <summary>
         /// 获取Ip
@@ -124,6 +130,46 @@ namespace NFine.Code
             }
             return macs;
         }
+        public static string GetClientMac()
+        {
+            string mac_dest = string.Empty;
+            // 在此处放置用户代码以初始化页面
+            try
+            {
+                string userip = HttpContext.Current == null ? Dns.GetHostName() : GetWebClientHostName(); ;
+                string strClientIP = HttpContext.Current == null ? Dns.GetHostName() : GetWebClientHostName().Trim();
+                Int32 ldest = inet_addr(strClientIP); //目的地的ip 
+                Int32 lhost = inet_addr("");   //本地服务器的ip 
+                Int64 macinfo = new Int64();
+                Int32 len = 6;
+                int res = SendARP(ldest, 0, ref macinfo, ref len);
+                string mac_src = macinfo.ToString("X");
+                while (mac_src.Length < 12)
+                {
+                    mac_src = mac_src.Insert(0, "0");
+                }
+                for (int i = 0; i < 11; i++)
+                {
+                    if (0 == (i % 2))
+                    {
+                        if (i == 10)
+                        {
+                            mac_dest = mac_dest.Insert(0, mac_src.Substring(i, 2));
+                        }
+                        else
+                        {
+                            mac_dest = "-" + mac_dest.Insert(0, mac_src.Substring(i, 2));
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return mac_dest;
+        }
         #endregion
 
         #region Ip城市(获取Ip城市)
@@ -206,5 +252,6 @@ namespace NFine.Code
             }
         }
         #endregion
+
     }
 }

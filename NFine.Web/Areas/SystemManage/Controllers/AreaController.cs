@@ -36,7 +36,7 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetTreeGridJson(string keyword, Pagination pagination)
-        {
+        { 
             var watch = Common.TimerStart();
             var data = areaApp.GetList();
             var treeList = new List<TreeGridModel>();

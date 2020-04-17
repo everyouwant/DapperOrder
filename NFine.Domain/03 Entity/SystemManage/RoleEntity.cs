@@ -15,7 +15,7 @@ namespace NFine.Domain.Entity.SystemManage
     [Table("Sys_Role")]
     [SQLinqTable("Sys_Role")]
     [PrimaryKey("F_Id")]
-    public class RoleEntity : IEntity<RoleEntity>, ICreationAudited, IDeleteAudited, IModificationAudited
+    public class RoleEntity : IEntity<RoleEntity>, IFullAudited
     {
         [Key]
         public string F_Id { get; set; }

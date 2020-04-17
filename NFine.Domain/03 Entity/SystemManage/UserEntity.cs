@@ -15,7 +15,7 @@ namespace NFine.Domain.Entity.SystemManage
     [Table("Sys_User")]
     [SQLinqTable("Sys_User")]
     [PrimaryKey("F_Id")]
-    public class UserEntity : IEntity<UserEntity>, ICreationAudited, IDeleteAudited, IModificationAudited
+    public class UserEntity : IEntity<UserEntity>, IFullAudited
     {
         [Key]
         public string F_Id { get; set; }

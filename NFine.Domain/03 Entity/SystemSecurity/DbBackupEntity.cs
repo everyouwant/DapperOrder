@@ -9,7 +9,7 @@ namespace NFine.Domain.Entity.SystemSecurity
     [Table("Sys_DbBackup")]
     [SQLinqTable("Sys_DbBackup")]
     [PrimaryKey("F_Id")]
-    public class DbBackupEntity : ICreationAudited, IDeleteAudited, IModificationAudited
+    public class DbBackupEntity : IFullAudited
     {
         [Key]
         public string F_Id { get; set; }

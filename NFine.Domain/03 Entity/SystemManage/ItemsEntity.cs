@@ -15,7 +15,7 @@ namespace NFine.Domain.Entity.SystemManage
     [Table("Sys_Items")]
     [SQLinqTable("Sys_Items")]
     [PrimaryKey("F_Id")]
-    public class ItemsEntity : IEntity<ItemsEntity>, ICreationAudited, IDeleteAudited, IModificationAudited
+    public class ItemsEntity : IEntity<ItemsEntity>, IFullAudited
     {
         [Key]
         public string F_Id { get; set; }

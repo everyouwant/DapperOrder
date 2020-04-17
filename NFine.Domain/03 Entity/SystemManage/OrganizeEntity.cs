@@ -15,7 +15,7 @@ namespace NFine.Domain.Entity.SystemManage
     [Table("Sys_Organize")]
     [SQLinqTable("Sys_Organize")]
     [PrimaryKey("F_Id")]
-    public class OrganizeEntity : IEntity<OrganizeEntity>, ICreationAudited, IDeleteAudited, IModificationAudited
+    public class OrganizeEntity : IEntity<OrganizeEntity>, IFullAudited
     {
         [Key]
         public string F_Id { get; set; }

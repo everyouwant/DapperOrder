@@ -15,7 +15,7 @@ namespace NFine.Domain.Entity.SystemManage
     [Table("Sys_ModuleButton")]
     [SQLinqTable("Sys_ModuleButton")]
     [PrimaryKey("F_Id")]
-    public class ModuleButtonEntity : IEntity<ModuleButtonEntity>, ICreationAudited, IDeleteAudited, IModificationAudited
+    public class ModuleButtonEntity : IEntity<ModuleButtonEntity>, IFullAudited
     {
         [Key]
         public string F_Id { get; set; }

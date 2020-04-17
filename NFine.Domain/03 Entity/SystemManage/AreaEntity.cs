@@ -15,7 +15,7 @@ namespace NFine.Domain.Entity.SystemManage
     [Table("Sys_Area")]
     [SQLinqTable("Sys_Area")]
     [PrimaryKey("F_Id")]
-    public class AreaEntity : IEntity<AreaEntity>, ICreationAudited, IDeleteAudited, IModificationAudited
+    public class AreaEntity : IEntity<AreaEntity>, IFullAudited
     {
         [Key]
         [Column("F_Id")]

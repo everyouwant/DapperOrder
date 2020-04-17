@@ -9,7 +9,7 @@ namespace NFine.Domain.Entity.SystemSecurity
     [Table("Sys_FilterIP")]
     [SQLinqTable("Sys_FilterIP")]
     [PrimaryKey("F_Id")]
-    public class FilterIPEntity : IEntity<FilterIPEntity>, ICreationAudited, IDeleteAudited, IModificationAudited
+    public class FilterIPEntity : IEntity<FilterIPEntity>, IFullAudited
     {
         [Key]
         public string F_Id { get; set; }

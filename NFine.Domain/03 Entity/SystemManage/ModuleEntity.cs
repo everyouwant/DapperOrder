@@ -15,7 +15,7 @@ namespace NFine.Domain.Entity.SystemManage
     [Table("Sys_Module")]
     [SQLinqTable("Sys_Module")]
     [PrimaryKey("F_Id")]
-    public class ModuleEntity : IEntity<ModuleEntity>, ICreationAudited, IModificationAudited, IDeleteAudited
+    public class ModuleEntity : IEntity<ModuleEntity>, IFullAudited
     {
         [Key]
         public string F_Id { get; set; }

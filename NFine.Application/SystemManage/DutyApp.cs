@@ -16,7 +16,17 @@ namespace NFine.Application.SystemManage
     public class DutyApp
     {
         private IRoleRepository service = new RoleRepository();
-
+        public IEnumerable<RoleEntity> GetList(Pagination pagination, string keyword = "")
+        {
+            var expression = ExtLinq.True<RoleEntity>();
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                expression = expression.And(t => t.F_FullName.Contains(keyword));
+                expression = expression.Or(t => t.F_EnCode.Contains(keyword));
+            }
+            expression = expression.And(t => t.F_Category == 2);
+            return service.FindList(expression, pagination);
+        }
         public List<RoleEntity> GetList(string keyword = "")
         {
             var expression = ExtLinq.True<RoleEntity>();

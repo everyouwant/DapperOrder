@@ -22,11 +22,21 @@ namespace NFine.Web.Areas.SystemManage.Controllers
 
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetGridJson(string keyword)
+        public ActionResult GetGridJson(Pagination pagination, string keyword)
         {
-            var data = roleApp.GetList(keyword);
-            return Content(data.ToJson());
+            var watch = Common.TimerStart();
+            var data = roleApp.GetList(pagination, keyword);
+            var jsondata = new
+            {
+                rows = data,
+                total = pagination.total,
+                page = pagination.page,
+                records = pagination.records,
+                costtime = Common.TimerEnd(watch)
+            };
+            return ToJsonResult(jsondata);
         }
+
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetFormJson(string keyValue)

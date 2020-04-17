@@ -31,6 +31,20 @@ namespace NFine.Application.SystemManage
             }
             return service.IQueryable(expression).OrderBy(t => t.F_SortCode).ToList();
         }
+        public IEnumerable<ItemsDetailEntity> GetList(Pagination pagination, string keyword = "",string itemId = "")
+        {
+            var expression = ExtLinq.True<ItemsDetailEntity>();
+            if (!string.IsNullOrEmpty(itemId))
+            {
+                expression = expression.And(t => t.F_ItemId == itemId);
+            }
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                expression = expression.And(t => t.F_ItemName.Contains(keyword));
+                expression = expression.Or(t => t.F_ItemCode.Contains(keyword));
+            }
+            return service.FindList(expression,pagination);
+        }
         public List<ItemsDetailEntity> GetItemList(string enCode)
         {
             return service.GetItemList(enCode);

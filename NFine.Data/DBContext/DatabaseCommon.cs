@@ -180,7 +180,7 @@ namespace NFine.Data
                     TranslateAttribute attr = x.GetCustomAttributes(typeof(TranslateAttribute), true).FirstOrDefault() as TranslateAttribute;
                     if (attr != null)
                     {
-                        TranslateInfo.Add(new string[] { x.Name, attr.mainTable, attr.originalField, attr.newField });
+                        TranslateInfo.Add(new string[] { x.Name, attr.mainTable, attr.originalField, attr.newField,attr.newKey });
                     }
                 });
             return TranslateInfo;
@@ -344,6 +344,15 @@ namespace NFine.Data
             else
             {
                 sb.Append(ExpToSqlHelper.DealExpress(exp));
+            }
+            if (operateType == OperateType.Select)
+            {
+                var translateInfo = DatabaseCommon.GetTranslateValue<T>();
+                if (translateInfo.Count(x => x.Length > 0) > 0)
+                {
+                    StringBuilder  stringBuilder = new StringBuilder();
+                    return stringBuilder.Append(PottingSql<T>(translateInfo, sb.ToString(), TableName));
+                }
             }
             return sb;
         }
@@ -982,14 +991,15 @@ namespace NFine.Data
                     {
                         typeof(T).GetProperties().ToList().ForEach(x =>
                         {
-                            sqlString = sqlString.Insert(sqlString.IndexOf("from"), string.Format(",{0}.{1} ", tablename, x.Name));
+                            sqlString = sqlString.Insert(sqlString.IndexOf("From"), string.Format(",{0}.{1} ", tablename, x.Name));
                         }
                             );
+                        sqlString = sqlString.Replace("* ,", string.Empty);
                         sqlString = sqlString.Replace( tablename+".* ,", string.Empty);
                     }
                 }
-                string selectString = sqlString.Substring(0, sqlString.IndexOf("where"));
-                string whereString = sqlString.Substring(sqlString.IndexOf("where"), sqlString.Length - sqlString.IndexOf("where"));
+                string selectString = sqlString.Substring(0, sqlString.IndexOf("Where"));
+                string whereString = sqlString.Substring(sqlString.IndexOf("Where"), sqlString.Length - sqlString.IndexOf("Where"));
                 List<string> tableName = new List<string>();
                 tableName.Add(tablename);
                 translateInfo.ForEach(y =>
@@ -1008,12 +1018,12 @@ namespace NFine.Data
                      }
                      else if (View)
                      {  
-                         string colName = selectString.Substring(0, selectString.IndexOf("from"));
-                         string soursName = selectString.Substring(selectString.IndexOf("from"), selectString.Length - selectString.IndexOf("from"));
+                         string colName = selectString.Substring(0, selectString.IndexOf("From"));
+                         string soursName = selectString.Substring(selectString.IndexOf("from"), selectString.Length - selectString.IndexOf("From"));
                          colName +=","+string.Format("{0}.{1} as T_{2}", y[1], y[3], y[0]);
                          selectString =string.Format("{0} {1}",colName , soursName);
                      }
-                     selectString = selectString + string.Format(" left join {0} on {1}.{2}={3}.{4}", changed ? string.Format("{0} as {1}", name, y[1]) : y[1], tablename, y[0], y[1], y[2]);
+                     selectString = selectString + string.Format(" left join {0} on {1}.{2}={3}.{4}", changed ? string.Format("{0} as {1}", name, y[1]) : y[1], tablename, y[2], y[1], y[4]);
                      changedIndex++;
                      tableName.Add(y[1].Trim());
                  });

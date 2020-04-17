@@ -31,8 +31,9 @@
             url: "/SystemManage/ItemsType/SubmitForm?keyValue=" + keyValue,
             param: $("#form1").formSerialize(),
             success: function () {
-                top.ItemsType.$("#gridList").resetSelection();
-                top.ItemsType.$("#gridList").trigger("reloadGrid");
+                 $.currentWindow().$("#gridList").trigger("reloadGrid");
+                //top.ItemsType.$("#gridList").resetSelection();
+                //top.ItemsType.$("#gridList").trigger("reloadGrid");
             }
         })
     }

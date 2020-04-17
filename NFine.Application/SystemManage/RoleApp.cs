@@ -18,7 +18,17 @@ namespace NFine.Application.SystemManage
         private IRoleRepository service = new RoleRepository();
         private ModuleApp moduleApp = new ModuleApp();
         private ModuleButtonApp moduleButtonApp = new ModuleButtonApp();
-
+        public IEnumerable<RoleEntity> GetList(Pagination pagination, string keyword = "")
+        {
+            var expression = ExtLinq.True<RoleEntity>();
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                expression = expression.And(t => t.F_FullName.Contains(keyword));
+                expression = expression.Or(t => t.F_EnCode.Contains(keyword));
+            }
+            expression = expression.And(t => t.F_Category == 1);
+            return service.FindList(expression, pagination);
+        }
         public List<RoleEntity> GetList(string keyword = "")
         {
             var expression = ExtLinq.True<RoleEntity>();

@@ -57,8 +57,9 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         }
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeGridJson(string keyword)
+        public ActionResult GetTreeGridJson(string keyword, Pagination pagination)
         {
+            var watch = Common.TimerStart();
             var data = organizeApp.GetList();
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -76,7 +77,9 @@ namespace NFine.Web.Areas.SystemManage.Controllers
                 treeModel.entityJson = item.ToJson();
                 treeList.Add(treeModel);
             }
-            return Content(treeList.TreeGridJson());
+            pagination.records = treeList.Count();
+            treeList = treeList.Skip(pagination.rows * (pagination.page - 1)).Take(pagination.rows).ToList();
+            return Content(treeList.TreeGridJson(pagination, watch));
         }
         [HttpGet]
         [HandlerAjaxOnly]

@@ -26,6 +26,22 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         }
         [HttpGet]
         [HandlerAjaxOnly]
+        public ActionResult GetPageJson(Pagination pagination,string keyword, string itemId)
+        {
+            var watch = Common.TimerStart();
+            var data = itemsDetailApp.GetList(pagination, keyword,itemId);
+            var jsondata = new
+            {
+                rows = data,
+                total = pagination.total,
+                page = pagination.page,
+                records = pagination.records,
+                costtime = Common.TimerEnd(watch)
+            };
+            return ToJsonResult(jsondata);
+        }
+        [HttpGet]
+        [HandlerAjaxOnly]
         public ActionResult GetSelectJson(string enCode)
         {
             var data = itemsDetailApp.GetItemList(enCode);

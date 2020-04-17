@@ -11,6 +11,15 @@ namespace NFine.Code
 {
     public static class TreeGrid
     {
+        public static string TreeGridJson(this List<TreeGridModel> data, Pagination pagination, System.Diagnostics.Stopwatch watch)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{ \"total\":" + pagination.total + ", \"page\": " + pagination.page + ", \"records\": " + pagination.records + ", \"costtime\": $costtime,\"rows\": [");
+            sb.Append(TreeGridJson(data, -1, "0"));
+            sb.Append("]}");
+            sb.Replace("$costtime", Common.TimerEnd(watch));
+            return sb.ToString();
+        }
         public static string TreeGridJson(this List<TreeGridModel> data)
         {
             StringBuilder sb = new StringBuilder();

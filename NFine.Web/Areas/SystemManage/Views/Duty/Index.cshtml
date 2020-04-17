@@ -32,7 +32,9 @@
                     }
                 },
                 { label: '备注', name: 'F_Description', width: 300, align: 'left' }
-            ]
+            ],
+             pager: "#gridPager",
+            viewrecords: true
         });
         $("#btn_search").click(function () {
             $gridList.jqGrid('setGridParam', {
@@ -123,4 +125,5 @@
 </div>
 <div class="gridPanel">
     <table id="gridList"></table>
+    <div id="gridPager"></div>
 </div>

@@ -20,6 +20,8 @@ namespace NFine.Domain.Entity.SystemManage
         [Key]
         public string F_Id { get; set; }
         public string F_ItemId { get; set; }
+        [Translate("Sys_Items", "F_ItemId", "F_FullName", "F_Id")]
+        public string F_ItemTypeName  { get; set; }
         public string F_ParentId { get; set; }
         public string F_ItemCode { get; set; }
         public string F_ItemName { get; set; }

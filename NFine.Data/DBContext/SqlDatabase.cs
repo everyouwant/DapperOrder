@@ -720,6 +720,8 @@ namespace NFine.Data
             using (var dbConnection = Connection)
             {
                 string strSql = DatabaseCommon.DealExp<T>(condition, OperateType.Select).ToString();
+               
+
                 int num = (pageIndex - 1) * pageSize;
                 int num1 = (pageIndex) * pageSize;
                 orderField = "order by " + orderField;

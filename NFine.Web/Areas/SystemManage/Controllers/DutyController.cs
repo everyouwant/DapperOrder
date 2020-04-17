@@ -17,12 +17,28 @@ namespace NFine.Web.Areas.SystemManage.Controllers
     {
         private DutyApp dutyApp = new DutyApp();
 
+        //[HttpGet]
+        //[HandlerAjaxOnly]
+        //public ActionResult GetGridJson(string keyword)
+        //{
+        //    var data = dutyApp.GetList(keyword);
+        //    return Content(data.ToJson());
+        //}
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetGridJson(string keyword)
+        public ActionResult GetGridJson(Pagination pagination, string keyword)
         {
-            var data = dutyApp.GetList(keyword);
-            return Content(data.ToJson());
+            var watch = Common.TimerStart();
+            var data = dutyApp.GetList(pagination, keyword);
+            var jsondata = new
+            {
+                rows = data,
+                total = pagination.total,
+                page = pagination.page,
+                records = pagination.records,
+                costtime = Common.TimerEnd(watch)
+            };
+            return ToJsonResult(jsondata);
         }
         [HttpGet]
         [HandlerAjaxOnly]

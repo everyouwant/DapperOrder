@@ -2,6 +2,11 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutIndex.cshtml";
 }
+<style>
+    #gridPager_left {
+        width:190px;
+    }
+</style>
 <script>
     $(function () {
         $('#layout').layout();
@@ -21,10 +26,12 @@
         var $gridList = $("#gridList");
         $gridList.dataGrid({
             height: $(window).height() - 96,
+            url: "/SystemManage/ItemsData/GetPageJson",
             colModel: [
                 { label: "主键", name: "F_Id", hidden: true, key: true },
-                { label: '名称', name: 'F_ItemName', width: 150, align: 'left' },
-                { label: '编号', name: 'F_ItemCode', width: 150, align: 'left' },
+                { label: '名称', name: 'F_ItemName', width: 100, align: 'left' },
+                { label: '编号', name: 'F_ItemCode', width: 100, align: 'left' },
+                { label: '字典类型', name: 'F_ItemTypeName', width: 100, align: 'left' },
                 { label: '排序', name: 'F_SortCode', width: 80, align: 'center' },
                 {
                     label: "默认", name: "F_IsDefault", width: 60, align: "center",
@@ -43,16 +50,37 @@
                     }
                 },
                 { label: "备注", name: "F_Description", index: "F_Description", width: 200, align: "left", sortable: false }
-            ]
+            ],
+             pager: "#gridPager",
+            viewrecords: true,
+            sortorder: "desc",
+           sortname: "F_SortCode"
         });
         $("#btn_search").click(function () {
+            var itemId;
+            if ($("#itemTree").getCurrentNode()) {
+                itemId = $("#itemTree").getCurrentNode().id;
+            }
             $gridList.jqGrid('setGridParam', {
-                url: "/SystemManage/ItemsData/GetGridJson",
-                postData: { itemId: $("#itemTree").getCurrentNode().id, keyword: $("#txt_keyword").val() },
+                url: "/SystemManage/ItemsData/GetPageJson",
+                postData: { itemId: itemId, keyword: $("#txt_keyword").val(),page:1 },
             }).trigger('reloadGrid');
         });
     }
     function btn_add() {
+        if (!$("#itemTree").getCurrentNode()) {
+            $.modalOpen({
+                id: "Form",
+                title: "新增分类",
+                url: "/SystemManage/ItemsType/Form",
+                width: "450px",
+                height: "380px",
+                callBack: function (iframeId) {
+                    top.frames[iframeId].submitForm();
+                }
+            });
+            return;
+        }
         var itemId = $("#itemTree").getCurrentNode().id;
         var itemName = $("#itemTree").getCurrentNode().text;
         if (!itemId) {
@@ -70,8 +98,20 @@
         });
     }
     function btn_edit() {
-        var itemName = $("#itemTree").getCurrentNode().text;
         var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        if (!$("#itemTree").getCurrentNode()) {
+            $.modalOpen({
+                id: "Form",
+                title: "修改分类",
+                 url: "/SystemManage/ItemsData/Form?keyValue=" + keyValue,
+                width: "450px",
+                height: "380px",
+                callBack: function (iframeId) {
+                    top.frames[iframeId].submitForm();
+                }
+            });
+        }
+        var itemName = $("#itemTree").getCurrentNode().text;
         $.modalOpen({
             id: "Form",
             title: itemName + " 》修改字典",
@@ -160,6 +200,8 @@
         </div>
         <div class="gridPanel">
             <table id="gridList"></table>
+            <div id="gridPager"></div>
         </div>
+
     </div>
 </div>

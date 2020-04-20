@@ -719,22 +719,23 @@ namespace NFine.Data
         {
             using (var dbConnection = Connection)
             {
-                string strSql = DatabaseCommon.DealExp<T>(condition, OperateType.Select).ToString();
-               
-
-                int num = (pageIndex - 1) * pageSize;
-                int num1 = (pageIndex) * pageSize;
-                orderField = "order by " + orderField;
-                //if (orderField.Length != 0)
-                //{
-                //    sql += "order by ";
-                //}
-                StringBuilder sb = new StringBuilder();
-                sb.Append("Select * From (Select ROW_NUMBER() Over (" + orderField + ")");
-                sb.Append(" As rowNum, * From (" + strSql + ") As T ) As N Where rowNum > " + num + " And rowNum <= " + num1 + "");
-                total = Convert.ToInt32(new DbHelper(dbConnection).ExecuteScalar(CommandType.Text, "Select Count(1) From (" + strSql + ") As t"));
-                var dataQuery = dbConnection.Query<T>(sb.ToString());
-                return dataQuery.ToList();
+                //string strSql = DatabaseCommon.DealExp<T>(condition, OperateType.Select).ToString();
+                //int num = (pageIndex - 1) * pageSize;
+                //int num1 = (pageIndex) * pageSize;
+                //orderField = "order by " + orderField;
+                //StringBuilder sb = new StringBuilder();
+                //sb.Append("Select * From (Select ROW_NUMBER() Over (" + orderField + ")");
+                //sb.Append(" As rowNum, * From (" + strSql + ") As T ) As N Where rowNum > " + num + " And rowNum <= " + num1 + "");
+                //total = Convert.ToInt32(new DbHelper(dbConnection).ExecuteScalar(CommandType.Text, "Select Count(1) From (" + strSql + ") As t"));
+                //var dataQuery = dbConnection.Query<T>(sb.ToString());
+                //return dataQuery.ToList();
+                string strSql = DatabaseCommon.DealExp<T>(condition, OperateType.Select).
+                   Append($"order by {orderField}").ToString();
+                //var dataQuery = dbConnection.Query<T>(strSql, buffered: false).AsQueryable();
+                var dataQuery = dbConnection.Query<T>(strSql);
+                total = dataQuery.Count();
+                var data = dataQuery.Skip(pageSize * (pageIndex - 1)).Take(pageSize).AsQueryable();
+                return data;
             }
         }
         public IEnumerable<T> FindList<T>(string strSql, string orderField, bool isAsc, int pageSize, int pageIndex, out int total) where T : class

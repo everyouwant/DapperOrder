@@ -2,10 +2,16 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Index.cshtml";
 }
+
 <script>
     $(function () {
         gridList();
     })
+    var img;
+    //自定义图片的格式，可以根据rowdata自定义
+    function alarmFormatter(cellvalue, options, rowdata) {
+        return ' <img src="../../Content/img/wechat.jpg" id="img' + rowdata.Id + '"  style="width:112px;height:28px;" />';
+    }
     function gridList() {
         var $gridList = $("#gridList");
         $gridList.dataGrid({
@@ -13,6 +19,7 @@
             height: $(window).height() - 96,
             colModel: [
                 { label: '主键', name: 'F_Id', hidden: true },
+                { label: '图片', name: 'dsource_alarm', index: 'dsource_alarm', align: "left", sortable: false, editable: false, formatter: alarmFormatter,width: 150 },
                 { label: '账户', name: 'F_Account', width: 80, align: 'left' },
                 { label: '姓名', name: 'F_RealName', width: 80, align: 'left' },
                 {
@@ -58,11 +65,24 @@
                         }
                     }
                 },
-                { label: '备注', name: 'F_Description', width: 200, align: 'left' }
+                { label: '备注', name: 'F_Description', width: 200, align: 'left' },
+
             ],
             pager: "#gridPager",
             sortname: 'F_DepartmentId asc,F_CreatorTime desc',
-            viewrecords: true
+            viewrecords: true,
+            gridComplete: function () {
+                $('#gridList img').hover(function (e) {
+                    $("body").append("<div id='preview'><img src='" + this.src + "' alt='Image preview'/></div>");
+                    $("#preview")
+                        .css("position", "absolute")
+                        .css("top", (e.pageY) + "px")
+                        .css("left", (e.pageX) + "px");
+                        /*.fadeIn("fast")*/;
+                }, function () {
+                    $("#preview").remove();
+                })
+            }
         });
         $("#btn_search").click(function () {
             $gridList.jqGrid('setGridParam', {

@@ -395,6 +395,7 @@ namespace NFine.Data
         /// <returns>int</returns>
         public static StringBuilder InsertSql<T>(T entity, string NotUpdateColName="")
         {
+
             Type type = entity.GetType();
             StringBuilder sb = new StringBuilder();
             sb.Append(" Insert Into ");
